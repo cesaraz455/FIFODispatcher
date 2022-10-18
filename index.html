@@ -5,10 +5,50 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="css/global.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.12.1/datatables.min.css"/>
     <title>FIFO Dispatcher</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap');
+
+        html,
+        body {
+            padding: 0;
+            margin: 0;
+            font-family: 'Roboto', sans-serif;
+            background-color: #f1f1f1;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        table {
+            border: 1px solid black;
+            margin-top: 10px;
+            margin-bottom: 10px;
+            font-size: 0.95rem;
+        }
+
+        table td {
+            padding: 3px 15px;
+        }
+
+        table thead tr {
+            background-color: rgb(71, 93, 128);
+            color: rgb(231, 231, 231);
+            font-weight: bold;
+        }
+
+        table tr:nth-child(2n) {
+            background-color: rgb(224, 232, 235);
+        }
+    </style>
 </head>
 <body>
     <div class="h-screen min-h-min">
@@ -38,6 +78,101 @@
         </main>
     </div>
     <script src="https://code.jquery.com/jquery-3.6.1.min.js"></script>
-    <script src="js/main.js" type="module"></script>
+    <script>
+        class Dispatcher {
+            constructor(table, addButton){
+                this.table = table;
+                this.addButton = addButton;
+                this.processes = [];
+                this.processID = 0;
+                this.executingProcess = false;
+            }
+
+            init(){
+                this.startMirror();
+                this.addButton.on('click', () => {
+                    this.addProcess();
+                });
+            }
+
+            startMirror(){
+                setInterval(() => {
+                    if(!this.executingProcess){
+                        let processesFiltered = this.processes.filter((process) => process.status == "En espera")
+                        if(processesFiltered.length > 0){
+                            let process = processesFiltered[0];
+                            if(process.status != "Terminado" && process.status != "Rechazado"){
+                                this.executingProcess = true;
+                                process.status = "Ejecución"
+                                this.renderTable();
+                                setTimeout(() => {
+                                    this.executingProcess = false;
+                                    process.status = "Terminado"
+                                    this.renderTable();
+                                }, process.time * 1000);
+                            }
+                        }
+                    }
+                }, 100);
+            }
+
+            addProcess(){
+                this.processID++;
+                if(this.processID <= 26){
+                    this.processes.push({
+                        processID: this.processID,
+                        name: "Proceso " + this.getLetter(this.processID),
+                        size: this.getRandomInt(1, 1024),
+                        time: this.getTime(), // Entre 20 y 50 segundos
+                        status: this.processes.length >= 15 ? "Rechazado" : "En espera"    
+                    });
+                    this.renderTable();
+                } else {
+                    alert("No se pueden agregar más procesos...");
+                }
+            }
+
+            renderTable(){
+                // Eliminación de contenido de la tabla
+                this.table.find("tbody tr").remove();
+                // Renderizado individual de la tabla
+                let tbody = this.table.find("tbody");
+                this.processes.forEach((process) => {
+                    // Asignación de clase para renderizado de color
+                    let classStatus = (process.status == "Terminado" ? "bg-green-500" : (process.status == "Ejecución" ? "bg-yellow-500" : (process.status == "Rechazado" ? "bg-red-600" : "bg-gray-400")))
+                    tbody.append($("<tr>"+
+                        "<td>" + process.processID + "</td>"+
+                        "<td>" + process.name + "</td>"+
+                        "<td>" + process.size + "</td>"+
+                        "<td>" + process.time + "</td>"+
+                        "<td class="+ classStatus +">" + process.status + "</td>"+
+                    "</tr>"));
+                });
+            }
+
+            getRandomInt(min, max) {
+                min = Math.ceil(min);
+                max = Math.floor(max);
+                return Math.floor(Math.random() * (max - min) + min);
+            }
+
+            getLetter(index){
+                let letters = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"];
+                return letters[index - 1];
+            }
+
+            getTime(){
+                let possibilities = [20,25,30,35,40,45,50];
+                return possibilities[this.getRandomInt(0,6)]
+            }
+        }
+
+        $(document).ready( function () {
+            let table = $("#processesTable");
+            let addButton = $("#addRandomProcess");
+            let dispatcher = new Dispatcher(table, addButton);
+            dispatcher.init();
+        } );
+    </script>
 </body>
 </html>
