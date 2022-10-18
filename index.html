@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="css/global.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.12.1/datatables.min.css"/>
+    <title>FIFO Dispatcher</title>
+</head>
+<body>
+    <div class="h-screen min-h-min">
+        <header class="w-full p-3 bg-sky-600 shadow-md">
+            <h1 class="text-center text-white font-bold">Universidad Central | Ingeniería de Sistemas</h1>
+        </header>
+        <main class="w-5/6 bg-white m-auto my-5 p-4 rounded shadow-md flex flex-col gap-3">
+            <h2 class="font-bold text-center">¡Bienvenido a FIFO Dispatcher!</h2>
+            <div>
+                <button id="addRandomProcess" class="inline-block bg-sky-600 py-1 px-3 rounded text-white shadow-md">
+                    <i class="fa-solid fa-plus mr-2"></i>
+                    Crear Proceso
+                </button>
+            </div>
+            <table id="processesTable">
+                <thead>
+                    <tr>
+                        <td>PID</td>
+                        <td>Nombre</td>
+                        <td>Tamaño <sub>Bytes</sub></td>
+                        <td>Tiempo <sub>Seg</sub></td>
+                        <td>Estado</td>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </main>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.6.1.min.js"></script>
+    <script src="js/main.js" type="module"></script>
+</body>
+</html>

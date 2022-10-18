@@ -1,0 +1,39 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap');
+
+html,
+body {
+  padding: 0;
+  margin: 0;
+  font-family: 'Roboto', sans-serif;
+  background-color: #f1f1f1;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+table {
+  border: 1px solid black;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  font-size: 0.95rem;
+}
+
+table td {
+    padding: 3px 15px;
+}
+
+table thead tr {
+    background-color: rgb(71, 93, 128);
+    color: rgb(231, 231, 231);
+    font-weight: bold;
+}
+
+table tr:nth-child(2n) {
+  background-color: rgb(224, 232, 235);
+}
